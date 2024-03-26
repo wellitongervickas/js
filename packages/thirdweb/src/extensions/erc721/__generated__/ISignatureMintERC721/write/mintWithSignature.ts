@@ -9,17 +9,16 @@ import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameter
  */
 
 type MintWithSignatureParamsInternal = {
-  req: AbiParameterToPrimitiveType<{
+  payload: AbiParameterToPrimitiveType<{
     type: "tuple";
-    name: "req";
+    name: "payload";
     components: [
       { type: "address"; name: "to" },
       { type: "address"; name: "royaltyRecipient" },
       { type: "uint256"; name: "royaltyBps" },
       { type: "address"; name: "primarySaleRecipient" },
       { type: "string"; name: "uri" },
-      { type: "uint256"; name: "quantity" },
-      { type: "uint256"; name: "pricePerToken" },
+      { type: "uint256"; name: "price" },
       { type: "address"; name: "currency" },
       { type: "uint128"; name: "validityStartTimestamp" },
       { type: "uint128"; name: "validityEndTimestamp" },
@@ -35,11 +34,11 @@ export type MintWithSignatureParams = Prettify<
       asyncParams: () => Promise<MintWithSignatureParamsInternal>;
     }
 >;
-const FN_SELECTOR = "0x439c7be5" as const;
+const FN_SELECTOR = "0x2c4510f8" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
-    name: "req",
+    name: "payload",
     components: [
       {
         type: "address",
@@ -63,11 +62,7 @@ const FN_INPUTS = [
       },
       {
         type: "uint256",
-        name: "quantity",
-      },
-      {
-        type: "uint256",
-        name: "pricePerToken",
+        name: "price",
       },
       {
         type: "address",
@@ -108,7 +103,7 @@ const FN_OUTPUTS = [
  * ```
  * import { encodeMintWithSignatureParams } "thirdweb/extensions/erc721";
  * const result = encodeMintWithSignatureParams({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  * ```
@@ -116,7 +111,7 @@ const FN_OUTPUTS = [
 export function encodeMintWithSignatureParams(
   options: MintWithSignatureParamsInternal,
 ) {
-  return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
+  return encodeAbiParameters(FN_INPUTS, [options.payload, options.signature]);
 }
 
 /**
@@ -129,7 +124,7 @@ export function encodeMintWithSignatureParams(
  * import { mintWithSignature } from "thirdweb/extensions/erc721";
  *
  * const transaction = mintWithSignature({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  *
@@ -148,8 +143,8 @@ export function mintWithSignature(
       "asyncParams" in options
         ? async () => {
             const resolvedParams = await options.asyncParams();
-            return [resolvedParams.req, resolvedParams.signature] as const;
+            return [resolvedParams.payload, resolvedParams.signature] as const;
           }
-        : [options.req, options.signature],
+        : [options.payload, options.signature],
   });
 }
