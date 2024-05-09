@@ -12,7 +12,7 @@ const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
 /**
  * @internal
  */
-async function getInAppWalletSDK(client: ThirdwebClient) {
+export async function getInAppWalletSDK(client: ThirdwebClient) {
   if (ewsSDKCache.has(client)) {
     return ewsSDKCache.get(client) as InAppWalletSdk;
   }

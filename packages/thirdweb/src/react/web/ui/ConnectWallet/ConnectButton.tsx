@@ -29,6 +29,7 @@ import { LockIcon } from "./icons/LockIcon.js";
 import { useConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { SignatureScreen } from "./screens/SignatureScreen.js";
+import { usePreFetchIframe } from "./utils.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -58,6 +59,12 @@ export function ConnectButton(props: ConnectButtonProps) {
     [props.wallets, props.appMetadata, props.chains],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
+
+  // prefetch iframe if inApp wallet is present
+  usePreFetchIframe({
+    client: props.client,
+    wallets,
+  });
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect

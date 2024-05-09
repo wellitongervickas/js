@@ -29,6 +29,7 @@ import {
   wideModalMaxHeight,
 } from "../constants.js";
 import { useConnectLocale } from "../locale/getConnectLocale.js";
+import { usePreFetchIframe } from "../utils.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
@@ -348,6 +349,12 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   );
   const localeId = props.locale || "en_US";
   const localeQuery = useConnectLocale(localeId);
+
+  // prefetch iframe if inApp wallet is present
+  usePreFetchIframe({
+    client: props.client,
+    wallets,
+  });
 
   const modalSize =
     !canFitWideModal() || wallets.length === 1
