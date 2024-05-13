@@ -10,7 +10,11 @@ import {
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
-import { useActiveAccount } from "../wallets/wallet-hooks.js";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useSwitchActiveWalletChain,
+} from "../wallets/wallet-hooks.js";
 
 type ShowModalData = {
   tx: PreparedTransaction;
@@ -38,6 +42,8 @@ export function useSendTransactionCore(
   gasless?: GaslessOptions,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
   const account = useActiveAccount();
+  const wallet = useActiveWallet();
+  const switchChain = useSwitchActiveWalletChain();
 
   return useMutation({
     mutationFn: async (tx) => {
@@ -46,9 +52,14 @@ export function useSendTransactionCore(
       }
 
       if (!showPayModal) {
+        if (wallet && tx.chain.id !== wallet?.getChain()?.id) {
+          await switchChain(tx.chain);
+        }
+
         return sendTransaction({
           transaction: tx,
-          account,
+          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          account: wallet?.getAccount()!,
           gasless,
         });
       }
