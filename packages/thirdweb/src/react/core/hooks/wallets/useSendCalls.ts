@@ -84,7 +84,10 @@ export function useSendCalls({
 }: { client: ThirdwebClient; waitForResult?: boolean }): UseMutationResult<
   GetCallsStatusResponse | WalletSendCallsId,
   Error,
-  Omit<SendCallsOptions, "chain" | "wallet"> & { wallet?: Wallet } // Optional wallet override
+  Omit<SendCallsOptions, "chain" | "wallet"> & {
+    wallet?: Wallet;
+    waitForResult?: boolean;
+  } // Optional wallet and waitForResult override
 > {
   const connectedWallet = useActiveWallet();
   const queryClient = useQueryClient();
@@ -100,7 +103,11 @@ export function useSendCalls({
       }
 
       const callsPromise = sendCalls({ ...options, wallet });
-      if (!waitForResult) {
+      if (
+        options.waitForResult === undefined
+          ? !waitForResult
+          : !options.waitForResult
+      ) {
         return callsPromise;
       }
 
