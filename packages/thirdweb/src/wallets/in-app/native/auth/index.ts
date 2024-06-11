@@ -19,7 +19,6 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
     const { InAppNativeConnector } = await import("../native-connector.js");
     return new InAppNativeConnector({
       client: client,
-      integratorId,
     });
   });
 }

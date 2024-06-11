@@ -2,7 +2,7 @@ import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
-import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
+import type { WalletId } from "../../../wallet-types.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
