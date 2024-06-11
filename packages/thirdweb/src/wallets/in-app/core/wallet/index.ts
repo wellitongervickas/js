@@ -2,7 +2,7 @@ import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
-import type { WalletId } from "../../../wallet-types.js";
+import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
@@ -59,7 +59,7 @@ export async function autoConnectInAppWallet(
 ): Promise<[Account, Chain]> {
   const user = await getAuthenticatedUser(connector);
   if (!user) {
-    throw new Error("not authenticated");
+    throw new Error("Failed to authenticate user.");
   }
 
   const authAccount = user.account;

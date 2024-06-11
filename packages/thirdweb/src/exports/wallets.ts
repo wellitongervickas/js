@@ -6,6 +6,7 @@ export {
 } from "../wallets/create-wallet.js";
 export {
   inAppWallet,
+  ecosystemWallet,
   /**
    * @deprecated use inAppWallet instead
    */

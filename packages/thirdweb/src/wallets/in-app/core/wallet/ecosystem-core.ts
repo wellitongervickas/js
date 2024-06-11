@@ -1,0 +1,120 @@
+import { trackConnect } from "../../../../analytics/track.js";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { Account, Wallet } from "../../../interfaces/wallet.js";
+import { createWalletEmitter } from "../../../wallet-emitter.js";
+import type {
+  CreateWalletArgs,
+  EcosystemWalletId,
+} from "../../../wallet-types.js";
+import type { InAppConnector } from "../interfaces/connector.js";
+
+const connectorCache = new WeakMap<ThirdwebClient, InAppConnector>();
+
+/**
+ * @internal
+ */
+export async function getOrCreateEcosystemWalletConnector(
+  client: ThirdwebClient,
+  connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>,
+) {
+  if (connectorCache.has(client)) {
+    return connectorCache.get(client) as InAppConnector;
+  }
+  const connector = await connectorFactory(client);
+  connectorCache.set(client, connector);
+  return connector;
+}
+
+/**
+ * @internal
+ */
+export function createEcosystemWallet(args: {
+  id: EcosystemWalletId;
+  createOptions: CreateWalletArgs<EcosystemWalletId>[1];
+  connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>;
+}): Wallet<EcosystemWalletId> {
+  // Under the hood, an ecosystem wallet wraps an in-app wallet
+  const { id, createOptions } = args;
+  const emitter = createWalletEmitter<EcosystemWalletId>();
+  let account: Account | undefined = undefined;
+  let chain: Chain | undefined = undefined;
+  let client: ThirdwebClient | undefined;
+
+  return {
+    id,
+    subscribe: emitter.subscribe,
+    getChain: () => chain,
+    getConfig: () => createOptions,
+    getAccount: () => account,
+    autoConnect: async (options) => {
+      const { autoConnectInAppWallet } = await import("./index.js");
+
+      const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+        options,
+        createOptions,
+      );
+      // set the states
+      client = options.client;
+      account = connectedAccount;
+      chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: id,
+        walletAddress: account.address,
+      });
+      // return only the account
+      return account;
+    },
+    connect: async (options) => {
+      const { connectInAppWallet } = await import("./index.js");
+
+      const [connectedAccount, connectedChain] = await connectInAppWallet(
+        options,
+        createOptions,
+      );
+      // set the states
+      client = options.client;
+      account = connectedAccount;
+      chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "inApp",
+        walletAddress: account.address,
+      });
+      // return only the account
+      return account;
+    },
+    disconnect: async () => {
+      // If no client is assigned, we should be fine just unsetting the states
+      if (client) {
+        const result = await logoutAuthenticatedUser({ client });
+        if (!result.success) {
+          throw new Error("Failed to logout");
+        }
+      }
+      account = undefined;
+      chain = undefined;
+      emitter.emit("disconnect", undefined);
+    },
+    switchChain: async (newChain) => {
+      if (createOptions?.smartAccount && client && account) {
+        // if account abstraction is enabled, reconnect to smart account on the new chain
+        const { autoConnectInAppWallet } = await import("./index.js");
+        const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+          {
+            chain: newChain,
+            client,
+          },
+          createOptions,
+        );
+        account = connectedAccount;
+        chain = connectedChain;
+      } else {
+        // if not, simply set the new chain
+        chain = newChain;
+      }
+      emitter.emit("chainChanged", newChain);
+    },
+  };
+}

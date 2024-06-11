@@ -6,6 +6,7 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
+  EcosystemWalletId,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
   WalletId,
@@ -46,11 +47,11 @@ export function createWallet<const ID extends WalletId>(
 ): Wallet<ID> {
   const [id, creationOptions] = args;
 
-  switch (id) {
+  switch (true) {
     /**
      * SMART WALLET
      */
-    case "smart": {
+    case id === "smart": {
       return smartWallet(
         creationOptions as CreateWalletArgs<"smart">[1],
       ) as Wallet<ID>;
@@ -58,8 +59,7 @@ export function createWallet<const ID extends WalletId>(
     /**
      * IN-APP WALLET
      */
-    case "embedded":
-    case "inApp": {
+    case id === "embedded" || id === "inApp": {
       return inAppWallet(
         creationOptions as CreateWalletArgs<"inApp">[1],
       ) as Wallet<ID>;
@@ -69,13 +69,17 @@ export function createWallet<const ID extends WalletId>(
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
-    case COINBASE: {
+    case id === COINBASE: {
       const options = creationOptions as CreateWalletArgs<typeof COINBASE>[1];
       return coinbaseWalletSDK({
         createOptions: options,
         providerFactory: () => getCoinbaseWebProvider(options),
       }) as Wallet<ID>;
     }
+    case id.split(".")[0] === "ecosystem":
+      return ecosystemWallet(
+        ...(args as CreateWalletArgs<EcosystemWalletId>),
+      ) as Wallet<ID>;
 
     /**
      * WALLET CONNECT AND INJECTED WALLETS + walletConnect standalone
