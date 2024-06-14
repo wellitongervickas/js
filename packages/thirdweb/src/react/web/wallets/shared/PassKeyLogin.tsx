@@ -13,7 +13,7 @@ import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { LoadingScreen } from "./LoadingScreen.js";
 import { setLastAuthProvider } from "./storage.js";
 
 // is passkey stored?
@@ -21,8 +21,8 @@ import { setLastAuthProvider } from "./storage.js";
 // else
 // - show login or signup options
 
-export function InAppWalletPassKeyLogin(props: {
-  wallet: Wallet<"inApp">;
+export function PassKeyLogin(props: {
+  wallet: Wallet;
   done: () => void;
   onBack?: () => void;
 }) {
@@ -110,7 +110,7 @@ export function InAppWalletPassKeyLogin(props: {
 }
 
 function LoginScreen(props: {
-  wallet: Wallet<"inApp">;
+  wallet: Wallet;
   done: () => void;
   client: ThirdwebClient;
   onCreate: () => void;
@@ -171,7 +171,7 @@ function LoginScreen(props: {
 }
 
 function SignupScreen(props: {
-  wallet: Wallet<"inApp">;
+  wallet: Wallet;
   done: () => void;
   client: ThirdwebClient;
   chain?: Chain;
