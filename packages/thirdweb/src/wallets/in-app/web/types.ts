@@ -6,7 +6,7 @@ import type { AuthAndWalletRpcReturnType } from "../core/authentication/type.js"
 import type { InAppWalletIframeCommunicator } from "./utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type Ecosystem = {
-  walletId: string;
+  id: string;
   partnerId?: string;
 };
 

@@ -2,7 +2,7 @@ import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
-import type { WalletId } from "../../../wallet-types.js";
+import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
@@ -27,8 +27,12 @@ export function isInAppWallet(
  * @internal
  */
 export async function connectInAppWallet(
-  options: WalletConnectionOption<"inApp">,
-  createOptions: CreateWalletArgs<"inApp">[1],
+  options:
+    | WalletConnectionOption<"inApp">
+    | WalletConnectionOption<EcosystemWalletId>,
+  createOptions:
+    | CreateWalletArgs<"inApp">[1]
+    | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
   const authResult = await connector.authenticate(options);
@@ -53,8 +57,12 @@ export async function connectInAppWallet(
  * @internal
  */
 export async function autoConnectInAppWallet(
-  options: WalletAutoConnectionOption<"inApp">,
-  createOptions: CreateWalletArgs<"inApp">[1],
+  options:
+    | WalletAutoConnectionOption<"inApp">
+    | WalletAutoConnectionOption<EcosystemWalletId>,
+  createOptions:
+    | CreateWalletArgs<"inApp">[1]
+    | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
   const user = await getAuthenticatedUser(connector);

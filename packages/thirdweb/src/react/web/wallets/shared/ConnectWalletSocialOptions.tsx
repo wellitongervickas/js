@@ -1,6 +1,7 @@
 "use client";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type {
@@ -143,13 +144,13 @@ export const ConnectWalletSocialOptions = (
         ? wallet.connect({
             ...connectOptions,
             ecosystem: {
-              walletId: wallet.id,
+              id: wallet.id,
               partnerId: wallet.getConfig()?.partnerId,
             },
           })
         : wallet.connect(connectOptions);
 
-      await setLastAuthProvider(strategy);
+      await setLastAuthProvider(strategy, webLocalStorage);
 
       setData({
         socialLogin: {

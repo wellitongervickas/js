@@ -54,8 +54,8 @@ export async function registerPasskey(options: {
   if (options.ecosystem?.partnerId) {
     customHeaders["x-ecosystem-partner-id"] = options.ecosystem.partnerId;
   }
-  if (options.ecosystem?.walletId) {
-    customHeaders["x-ecosystem-id"] = options.ecosystem.walletId;
+  if (options.ecosystem?.id) {
+    customHeaders["x-ecosystem-id"] = options.ecosystem.id;
   }
 
   // 4. send the registration object to the server
@@ -118,8 +118,8 @@ export async function loginWithPasskey(options: {
   if (options.ecosystem?.partnerId) {
     customHeaders["x-ecosystem-partner-id"] = options.ecosystem.partnerId;
   }
-  if (options.ecosystem?.walletId) {
-    customHeaders["x-ecosystem-id"] = options.ecosystem.walletId;
+  if (options.ecosystem?.id) {
+    customHeaders["x-ecosystem-id"] = options.ecosystem.id;
   }
 
   // 3. send the authentication object to the server/iframe

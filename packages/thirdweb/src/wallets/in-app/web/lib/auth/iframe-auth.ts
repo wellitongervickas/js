@@ -14,6 +14,8 @@ import { BaseLogin } from "./base-login.js";
 export type AuthQuerierTypes = {
   logout: undefined;
   initIframe: {
+    partnerId?: string;
+    ecosystemId?: string;
     clientId: string;
     authCookie: string;
     walletUserId: string;

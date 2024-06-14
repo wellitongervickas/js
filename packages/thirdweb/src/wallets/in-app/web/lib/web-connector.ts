@@ -70,7 +70,6 @@ export class InAppWebConnector implements InAppConnector {
       client,
       querier: this.querier,
       baseUrl,
-      ecosystem,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({
@@ -81,7 +80,7 @@ export class InAppWebConnector implements InAppConnector {
           procedureName: "initIframe",
           params: {
             partnerId: ecosystem?.partnerId,
-            ecosystemId: ecosystem?.walletId,
+            ecosystemId: ecosystem?.id,
             deviceShareStored: authResult.walletDetails.deviceShareStored,
             clientId: this.client.clientId,
             walletUserId: authResult.storedToken.authDetails.userWalletId,
@@ -145,7 +144,7 @@ export class InAppWebConnector implements InAppConnector {
       default:
         assertUnreachable(
           strategy,
-          `Provider: ${strategy} doesnt require pre-authentication`,
+          `Provider: ${strategy} doesn't require pre-authentication`,
         );
     }
   }

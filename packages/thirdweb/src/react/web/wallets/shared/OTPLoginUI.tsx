@@ -59,7 +59,7 @@ export function OTPLoginUI(props: {
         const status = await preAuthenticate({
           ecosystem: isEcosystem
             ? {
-                walletId: wallet.id,
+                id: wallet.id,
               }
             : undefined,
           email: userInfo.email,
@@ -71,7 +71,7 @@ export function OTPLoginUI(props: {
         const status = await preAuthenticate({
           ecosystem: isEcosystem
             ? {
-                walletId: wallet.id,
+                id: wallet.id,
               }
             : undefined,
           phoneNumber: userInfo.phone,

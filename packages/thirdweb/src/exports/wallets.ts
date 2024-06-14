@@ -6,12 +6,12 @@ export {
 } from "../wallets/create-wallet.js";
 export {
   inAppWallet,
-  ecosystemWallet,
   /**
    * @deprecated use inAppWallet instead
    */
   inAppWallet as embeddedWallet,
 } from "../wallets/in-app/web/in-app.js";
+export { ecosystemWallet } from "../wallets/in-app/web/ecosystem.js";
 export { smartWallet } from "../wallets/smart/smart-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";

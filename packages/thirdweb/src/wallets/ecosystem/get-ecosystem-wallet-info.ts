@@ -15,7 +15,7 @@ export async function getEcosystemWalletInfo(
   walletId: EcosystemWalletId,
 ): Promise<Prettify<WalletInfo>> {
   const headers = new Headers();
-  headers.set("x-ecosystem-id", walletId);
+  headers.set("x-ecosystem-partner-id", "80ea22d8-7471-43e9-9f20-961f6fa88771");
   const res = await fetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/ecosystem-wallet`,
     {
@@ -25,8 +25,10 @@ export async function getEcosystemWalletInfo(
 
   const data = await res.json();
 
-  if (!data) {
-    throw new Error(`Could not find ecosystem wallet with id ${walletId}`);
+  if (!data || data.code === "UNAUTHORIZED") {
+    throw new Error(
+      data.message || `Could not find ecosystem wallet with id ${walletId}`,
+    );
   }
 
   return {

@@ -53,7 +53,7 @@ export class InAppWalletIframeCommunicator<
       walletUserId: await localStorage.getWalletUserId(),
       clientId: this.clientId,
       partnerId: this.ecosystem?.partnerId,
-      ecosystemId: this.ecosystem?.walletId,
+      ecosystemId: this.ecosystem?.id,
     };
   }
 }
@@ -88,8 +88,8 @@ export function createInAppWalletIframeLink({
   if (ecosystem?.partnerId !== undefined) {
     inAppWalletUrl.searchParams.set("partnerId", ecosystem.partnerId);
   }
-  if (ecosystem?.walletId !== undefined) {
-    inAppWalletUrl.searchParams.set("ecosystemId", ecosystem.walletId);
+  if (ecosystem?.id !== undefined) {
+    inAppWalletUrl.searchParams.set("ecosystemId", ecosystem.id);
   }
   return inAppWalletUrl;
 }

@@ -175,7 +175,7 @@ export class BaseLogin extends AbstractLogin<
                   developerClientId: this.client.clientId,
                   authOption: args.oauthProvider,
                   partnerId: this.ecosystem?.partnerId,
-                  ecosystemId: this.ecosystem?.walletId,
+                  ecosystemId: this.ecosystem?.id,
                 },
                 this.baseUrl,
               );

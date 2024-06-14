@@ -6,8 +6,7 @@ import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdSt
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
-import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { getStorage } from "../../../core/storage.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { getLastAuthProvider } from "../../wallets/shared/storage.js";
 import {
   emailIcon,

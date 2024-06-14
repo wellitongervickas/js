@@ -1,5 +1,5 @@
-import type { Wallet } from "ethers";
 import type { ThirdwebClient } from "../../../client/client.js";
+import type { Wallet } from "../../interfaces/wallet.js";
 import type {
   CreateWalletArgs,
   EcosystemWalletId,
@@ -47,12 +47,18 @@ import { createEcosystemWallet } from "../core/wallet/ecosystem-core.js";
 export function ecosystemWallet(
   ...args: CreateWalletArgs<EcosystemWalletId>
 ): Wallet<EcosystemWalletId> {
+  const [ecosystemId, createOptions] = args;
   return createEcosystemWallet({
+    id: ecosystemId,
     createOptions,
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({
         client,
+        ecosystem: {
+          id: ecosystemId,
+          partnerId: createOptions?.partnerId,
+        },
       });
     },
   });

@@ -19,6 +19,8 @@ import { openWindow } from "../utils/web/openWindow.js";
 import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
 import { getCoinbaseWebProvider } from "./coinbase/coinbaseSDKWallet.js";
 import { COINBASE } from "./constants.js";
+import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
+import { ecosystemWallet } from "./in-app/web/ecosystem.js";
 import { inAppWallet } from "./in-app/web/in-app.js";
 import { smartWallet } from "./smart/smart-wallet.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
@@ -76,7 +78,7 @@ export function createWallet<const ID extends WalletId>(
         providerFactory: () => getCoinbaseWebProvider(options),
       }) as Wallet<ID>;
     }
-    case id.split(".")[0] === "ecosystem":
+    case isEcosystemWallet(id):
       return ecosystemWallet(
         ...(args as CreateWalletArgs<EcosystemWalletId>),
       ) as Wallet<ID>;
