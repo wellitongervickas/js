@@ -56,7 +56,6 @@ export abstract class AbstractLogin<
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link InAppWalletSDK.auth} instead.
    * @internal
    */
   constructor({
